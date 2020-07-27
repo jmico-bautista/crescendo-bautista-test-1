@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/home.css">
+    <title>Cooking Collective</title>
+</head>
+<body class="main_body">
+    <div class="bg_blur"></div>
+
+    <div id="recipe_container">
+        <div id="recipe_listing" class="set_margin"></div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    var listing = new XMLHttpRequest();
+    window.onload = function(event) {
+        listing.responseType = 'json';
+        listing.open("GET","/recipes",true);
+        listing.onreadystatechange = handleRequestStateChange;
+        listing.send(null);
+    };
+
+    function handleRequestStateChange (){
+        if( listing.readyState == 4 && listing.status == 200 ){
+            var list = listing.response;
+            for (let index = 0; index < list.length; index++) {
+                console.log(list[index])
+                var elem = '';
+                elem += '<a href="/templates/recipe_template.html?uuid='+list[index].uuid+'">';
+                    elem += '<div onclick="open_recipe_book()" class="recipe_tile" style="background-image:url('+list[index].images.medium+')">';
+                        elem += '<div class="time">';
+                            elem += '<span>'+parseInt( list[index].prepTime + list[index].cookTime )+'<br/>min</span>';
+                            elem += '<hr/><span>'+list[index].servings+'</span>';
+                        elem += '</div>';
+
+                        elem += '<div class="content">'
+                            elem += '<div class="title">';
+                                elem += '<span>'+list[index].title+'</span>';
+                            elem += '</div>';
+                            elem += '<div class="description">';
+                                elem += '<span>'+list[index].description+'</span>';
+                            elem += '</div>';
+                        elem += '</div>';
+
+                    elem += '</div>';
+                elem += '</a>';
+
+                document.getElementById('recipe_listing').innerHTML += elem
+            }
+        }
+    }
+</script>

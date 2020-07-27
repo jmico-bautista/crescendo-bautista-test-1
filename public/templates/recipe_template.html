@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/recipe_template.css">
+    <title>Recipe Details</title>
+</head>
+<body>
+    <div id="header" style="background-image: url(../img/backgrounds/lukas-blazek-EWDvHNNfUmQ-unsplash.jpg);">
+    </div>
+    <div class="recipe_content">
+        <div class="recipe_ingridients">
+            <div class="label">
+                <span>Ingridients</span>
+            </div>
+            <div class="ingridients_listing">
+                <ul id="listing">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="recipe_direction">
+            <div class="recipe_intro">
+                <div id="name"></div>
+                <div id="desc"></div>
+            </div>
+
+            <div class="recipe_directions">
+                <ul id="direction_listing">
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    var params = {}
+    var offers = []
+    location.search.substr(1).split("&")
+        .forEach( function( item ) {
+            params[item.split("=")[0]] = item.split("=")[1]
+        });
+
+
+    var specials = new XMLHttpRequest();
+    specials.responseType = 'json';
+    specials.open("GET","/specials",true);
+    specials.onreadystatechange = function () {
+        specials.onload = function (e) {
+            for (var index = 0; index < this.response.length; index++) {
+                offers[this.response[index].ingredientId] = this.response[index];
+            }
+        }
+    };
+    specials.send(null);
+    
+    var recipe = new XMLHttpRequest();
+    recipe.responseType = 'json';
+    recipe.open("GET","/recipes/"+params['uuid'],true);
+    recipe.onreadystatechange = handleRequestStateChange;
+    recipe.send(null);
+
+    function handleRequestStateChange (){
+        if( recipe.readyState == 4 && recipe.status == 200 ){
+            var ingridients = recipe.response.ingredients
+            for (let index = 0; index < ingridients.length; index++) {
+                let ingrid_html = '';
+                ingrid_html += '<li class="ingridient">';
+                        ingrid_html += '<span>'+ingridients[index].amount+' </span>';
+                        ingrid_html += '<span>'+ingridients[index].measurement+' </span>';
+                        ingrid_html += '<span>'+ingridients[index].name+'</span>';
+
+                        if ( offers[ingridients[index].uuid] ) {
+                            console.log(offers[ingridients[index].uuid])
+                            ingrid_html += '<ul class="offer">';
+                                ingrid_html += '<li class="desc">';
+                                    ingrid_html += '<span style="text-transform:capitalize">'+offers[ingridients[index].uuid].type+'! </span>';
+                                    ingrid_html += '<span>'+offers[ingridients[index].uuid].text+' </span>';
+                                    ingrid_html += '<span>'+offers[ingridients[index].uuid].title+' </span>';
+                                ingrid_html += '</li>';
+                            ingrid_html += '</ul>';
+                        }
+                ingrid_html += '</li>';
+                document.getElementById('listing').innerHTML += ingrid_html;
+            }
+
+            document.getElementById('name').innerHTML = recipe.response.title;
+            document.getElementById('desc').innerHTML = recipe.response.description + " Atleast "+ recipe.response.servings +" people can enjoy this " + parseInt( recipe.response.prepTime + recipe.response.cookTime ) + " minutes dish! ";
+            
+            var directions = recipe.response.directions
+            for (let index = 0; index < directions.length; index++) {
+                let ingrid_html = '';
+                ingrid_html += '<li class="directions">';
+                        ingrid_html += '<span>'+directions[index].instructions+' </span>';
+                ingrid_html += '</li>';
+                document.getElementById('direction_listing').innerHTML += ingrid_html;
+            }
+        }
+    }
+</script>

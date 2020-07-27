@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    font-family: "Courier New", Courier, monospace;
+}
+
+#header {
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    filter: blur(2px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.recipe_content {
+    box-sizing: border-box;
+    margin: 40px;
+    height: 88vh;
+    background: rgba(225,225,225,0.9);
+    position: relative;
+}
+
+.recipe_ingridients {
+    display: inline-block;
+    background: rgb(43 41 41);
+    color: #ffff;
+    position: absolute;
+    top: -40px;
+    left: 50px;
+    width: 25%;
+    height: 114%;
+}
+
+.recipe_ingridients > .label {
+    text-align: center;
+    padding: 18px 18px 7px 18px;
+    font-weight: 700;
+}
+
+.ingridients_listing > #listing {
+    padding: 0 40px;
+}
+
+.ingridients_listing > #listing > .ingridient > ul {
+    display: inline-flex;
+    padding: 0;
+    width: 100%;
+    list-style: none;
+}
+
+.ingridients_listing > #listing > .ingridient > ul > li {
+    padding-right: 8px;
+    text-decoration: underline;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.ingridients_listing > #listing > .ingridient {
+    margin-bottom: 8px;
+}
+
+.recipe_direction {
+    position: absolute;
+    top: 20px;
+    left: 30%;
+}
+
+.recipe_direction > .recipe_intro > #name {
+    font-size: 20pt;
+    font-weight: 600;
+}
+
+#direction_listing {
+    padding: 15px;
+}
+
+#direction_listing > li {
+    margin-bottom: 10px;
+}
